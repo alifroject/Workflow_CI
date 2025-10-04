@@ -1,6 +1,5 @@
 name: Workflow_CI_Project
-docker_env:
-  image: continuumio/miniconda3
+conda_env: conda.yaml
 entry_points:
   main:
     parameters:
