@@ -27,7 +27,8 @@ jobs:
     - name: Run MLflow project
       id: mlflow-run
       run: |
-        mlflow run MLProject/ --experiment-name "Advance_CI"
+        cd MLProject
+        mlflow run . --experiment-name "Advance_CI" --env-manager local
 
     - name: Get latest MLflow run_id
       id: get-run-id
