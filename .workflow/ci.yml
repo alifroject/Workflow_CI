@@ -24,14 +24,13 @@ jobs:
         pip install --upgrade pip
         pip install mlflow scikit-learn pandas dagshub gdown docker
 
-    - name: Run modelling with DagsHub token
+    - name: Run MLflow project with DagsHub token
       id: mlflow-run
       env:
-        DAGSHUB_USER: alifroject
         DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
       run: |
         cd MLProject
-        python modelling.py --test_size 0.2
+        mlflow run . --experiment-name "Advance_CI" --env-manager local
 
     - name: Get latest MLflow run_id
       id: get-run-id
