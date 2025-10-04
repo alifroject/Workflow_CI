@@ -4,4 +4,4 @@ entry_points:
   main:
     parameters:
       test_size: {type: float, default: 0.2}
-    command: "bash -c 'export DAGSHUB_TOKEN=$DAGSHUB_TOKEN && python modelling.py --test_size {test_size}'"
+    command: "python modelling.py --test_size {test_size}"
