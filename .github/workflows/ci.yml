@@ -30,23 +30,11 @@ jobs:
         cd MLProject
         mlflow run . --experiment-name "Advance_CI" --env-manager local
 
-    - name: Get latest MLflow run_id
-      id: get-run-id
+    - name: Build Docker Image Manually
       run: |
-        RUN_ID=$(mlflow runs list --experiment-name "Advance_CI" | grep -o '[a-f0-9]\{32\}' | head -1)
-        echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
-        echo "Run ID: $RUN_ID"
-
-    - name: Build Docker Model
-      run: |
-        echo "Building Docker image..."
-        # Coba multiple approaches
-        if [ -n "${{ steps.get-run-id.outputs.run_id }}" ] && mlflow models build-docker -m "runs:/${{ steps.get-run-id.outputs.run_id }}/model" -n "alifroject/ml-model:latest" 2>/dev/null; then
-          echo "Docker image built from run_id"
-        else
-          echo "Building from local model directory"
-          mlflow models build-docker -m "MLProject/model" -n "alifroject/ml-model:latest"
-        fi
+        echo "Building Docker image from Dockerfile..."
+        cd MLProject
+        docker build -t alifroject/ml-model:latest .
         echo "Docker image built successfully"
 
     - name: Log in to Docker Hub
