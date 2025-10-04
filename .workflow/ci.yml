@@ -32,10 +32,13 @@ dagshub.init(repo_owner='alifroject', repo_name='Eksperimen_SML_Alif-Jovani-Safi
 print('DagsHub MLflow initialized')
 "
 
-    - name: Run MLflow project
+    - name: Run modelling with DagsHub token
       id: mlflow-run
+      env:
+        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
       run: |
-        mlflow run MLProject/ --experiment-name "Advance_CI"
+        cd MLProject
+        python modelling.py --test_size 0.2
 
     - name: Get latest MLflow run_id
       id: get-run-id
