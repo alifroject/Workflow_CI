@@ -26,6 +26,8 @@ jobs:
 
     - name: Run MLflow project
       id: mlflow-run
+      env:
+        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
       run: |
         cd MLProject
         mlflow run . --experiment-name "Advance_CI" --env-manager local
