@@ -10,8 +10,7 @@ import os
 
 dagshub.init(repo_owner='alifroject',
              repo_name='Eksperimen_SML_Alif-Jovani-Safik',
-             mlflow=True,
-             token=os.getenv('DAGSHUB_TOKEN'))
+             mlflow=True)
 
 # Load dataset lokal
 data = pd.read_csv("MLProject/kc_house_preprocessed.csv")

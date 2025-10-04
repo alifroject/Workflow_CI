@@ -24,17 +24,10 @@ jobs:
         pip install --upgrade pip
         pip install mlflow scikit-learn pandas dagshub gdown docker
 
-    - name: Initialize DagsHub MLflow
-      run: |
-        python -c "
-import dagshub
-dagshub.init(repo_owner='alifroject', repo_name='Eksperimen_SML_Alif-Jovani-Safik', mlflow=True)
-print('DagsHub MLflow initialized')
-"
-
     - name: Run modelling with DagsHub token
       id: mlflow-run
       env:
+        DAGSHUB_USER: alifroject
         DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
       run: |
         cd MLProject
