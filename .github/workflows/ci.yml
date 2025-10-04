@@ -24,10 +24,20 @@ jobs:
         pip install --upgrade pip
         pip install mlflow scikit-learn pandas dagshub gdown docker
 
-    - name: Run MLflow project with DagsHub token
-      id: mlflow-run
+    - name: Setup DagsHub credentials
       env:
         DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+      run: |
+        cat > ~/.netrc << EOF
+        machine dagshub.com
+        login alifroject
+        password $DAGSHUB_TOKEN
+        EOF
+        chmod 600 ~/.netrc
+        echo "DagsHub credentials configured"
+
+    - name: Run MLflow project
+      id: mlflow-run
       run: |
         cd MLProject
         mlflow run . --experiment-name "Advance_CI" --env-manager local
