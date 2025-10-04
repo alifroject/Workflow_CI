@@ -1,5 +1,4 @@
 import gdown
-import dagshub
 import mlflow
 import mlflow.sklearn
 import pandas as pd
@@ -8,12 +7,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import os
 
-dagshub.init(repo_owner='alifroject',
-             repo_name='Eksperimen_SML_Alif-Jovani-Safik',
-             mlflow=True)
 
-
-data = pd.read_csv("MLProject/kc_house_preprocessing.csv")
+data = pd.read_csv("kc_house_preprocessing.csv")
 X = data.drop(columns=["price"])
 y = data["price"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -39,7 +34,9 @@ with mlflow.start_run(run_name="RandomForest_Advanced"):
     os.makedirs(artifacts_path, exist_ok=True)
     mlflow.sklearn.save_model(best_model, path=artifacts_path)
 
-  
     model_file_id = '1nsiwAD8TmsUfbiiAwYiPh-BH6RvADEwq' 
     model_url = f'https://drive.google.com/uc?id={model_file_id}'
     gdown.download(model_url, os.path.join(artifacts_path, 'model.pkl'), quiet=False)
+
+    print("Model training completed!")
+    print(f"R2 Score: {r2:.4f}")
