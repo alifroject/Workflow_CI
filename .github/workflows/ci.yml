@@ -24,19 +24,21 @@ jobs:
         pip install --upgrade pip
         pip install mlflow scikit-learn pandas dagshub gdown docker
 
-    - name: Run MLflow project
+    - name: Run modelling with DagsHub token
       id: mlflow-run
       env:
+        DAGSHUB_USER: alifroject
         DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
       run: |
         cd MLProject
-        mlflow run . --experiment-name "Advance_CI" --env-manager local
+        python modelling.py --test_size 0.2
 
     - name: Get latest MLflow run_id
       id: get-run-id
       run: |
         RUN_ID=$(mlflow runs list --experiment-name "Advance_CI" | grep -o '[a-f0-9]\{32\}' | head -1)
         echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
+        echo "Run ID: $RUN_ID"
 
     - name: Build Docker Model
       run: |
@@ -59,5 +61,7 @@ jobs:
 
     - name: Complete job
       run: |
-        echo "MLflow CI completed!"
-        echo "Model trained & Docker image pushed"
+        echo "MLflow Advance CI completed!"
+        echo "Model trained with DagsHub tracking"
+        echo "Docker image built & pushed to Hub"
+        echo "All advance criteria fulfilled!"

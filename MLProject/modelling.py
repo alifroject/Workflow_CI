@@ -12,8 +12,8 @@ dagshub.init(repo_owner='alifroject',
              repo_name='Eksperimen_SML_Alif-Jovani-Safik',
              mlflow=True)
 
-# Load dataset lokal
-data = pd.read_csv("MLProject/kc_house_preprocessed.csv")
+
+data = pd.read_csv("MLProject/kc_house_preprocessing.csv")
 X = data.drop(columns=["price"])
 y = data["price"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
