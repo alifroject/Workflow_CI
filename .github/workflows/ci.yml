@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  DOCKER_USERNAME: alifroject
+  DOCKER_IMAGE: alifroject/ml-model
+
 jobs:
   advance-ml-pipeline:
     runs-on: ubuntu-latest
@@ -15,6 +19,8 @@ jobs:
       run: |
         echo "Starting MLflow Advance CI pipeline..."
         echo "Job setup completed"
+        echo "Docker Username: $DOCKER_USERNAME"
+        echo "Docker Image: $DOCKER_IMAGE"
       
     - name: Run actions/checkout@v3
       uses: actions/checkout@v3
@@ -41,29 +47,38 @@ jobs:
       run: |
         echo "Building Docker Model..."
         cd MLProject
-        docker build -t alifroject/ml-model:latest .
+        docker build -t $DOCKER_IMAGE:latest .
         echo "Docker Model built successfully"
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Log in to Docker Hub dengan Token
+      run: |
+        echo "Logging in to Docker Hub..."
+        echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        echo "Docker Hub login successful"
+
+    - name: Verify Docker Images
+      run: |
+        echo "Available Docker images:"
+        docker images
 
     - name: Tag Docker Image
       run: |
         echo "Tagging Docker Image..."
-        docker tag alifroject/ml-model:latest alifroject/ml-model:${{ github.sha }}
+        docker tag $DOCKER_IMAGE:latest $DOCKER_IMAGE:${{ github.sha }}
 
     - name: Push Docker Image
       run: |
         echo "Pushing Docker Image to Docker Hub..."
-        docker push alifroject/ml-model:latest
-        docker push alifroject/ml-model:${{ github.sha }}
+        echo "Pushing latest tag..."
+        docker push $DOCKER_IMAGE:latest
+        echo "Pushing SHA tag..."
+        docker push $DOCKER_IMAGE:${{ github.sha }}
+        echo "Docker images pushed successfully"
 
     - name: Post Log in to Docker Hub
       run: |
         echo "Post-processing Docker Hub login..."
+        docker logout
         echo "Docker Hub session cleaned up"
 
     - name: Post Set up Python 3.12.7
