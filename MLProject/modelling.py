@@ -7,7 +7,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import os
 
-
 data = pd.read_csv("kc_house_preprocessing.csv")
 X = data.drop(columns=["price"])
 y = data["price"]
@@ -30,13 +29,11 @@ with mlflow.start_run(run_name="RandomForest_Advanced"):
     mlflow.log_metric("MAE", mae)
     mlflow.log_metric("MSE", mse)
 
-    artifacts_path = "artifacts/model"
-    os.makedirs(artifacts_path, exist_ok=True)
-    mlflow.sklearn.save_model(best_model, path=artifacts_path)
+    mlflow.sklearn.save_model(best_model, "model")
 
     model_file_id = '1nsiwAD8TmsUfbiiAwYiPh-BH6RvADEwq' 
     model_url = f'https://drive.google.com/uc?id={model_file_id}'
-    gdown.download(model_url, os.path.join(artifacts_path, 'model.pkl'), quiet=False)
+    gdown.download(model_url, 'model.pkl', quiet=False)
 
     print("Model training completed!")
     print(f"R2 Score: {r2:.4f}")
